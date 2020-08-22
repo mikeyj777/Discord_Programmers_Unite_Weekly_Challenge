@@ -41,7 +41,7 @@ ssqdict[1] = 1
 for n in range(11,100000001):
     if isPalindrome(n):
         a=2
-        for m in range(1,n-1):
+        for m in range(1,n):
             if not m in ssqdict:
                 ssqdict[m] = ssqdict[m-1] + m**2
             if ssqdict[m] == n:
@@ -51,13 +51,13 @@ for n in range(11,100000001):
             if ssqdict[m] > n:
                 ans = ssqdict[m]
                 breakout = False
-                for l in range(1,m-1):
-                    ans -= ssqdict[l]
+                for l in range(1,m):
+                    ans = ssqdict[m] - ssqdict[l]
                     if ans <= n:
                         if ans == n:
                             interesting_nums.append(n)
                             print(n)
-                        breakout = True
+                            breakout = True
                         break
                 if breakout:
                     break
