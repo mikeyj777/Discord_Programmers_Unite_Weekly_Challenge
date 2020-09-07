@@ -21,8 +21,7 @@
 
 import numpy as np
 
-interesting_nums = []
-ssqdict = {}
+interesting_nums = {}
 
 def isPalindrome(n):
     n = str(n)
@@ -36,32 +35,35 @@ def isPalindrome(n):
         fwdchar += 1
         bkwdchar -= 1
 
-ssqdict[1] = 1
+#the smallest set of consecutive numbers whose product is greater than or equal to 1e8:
+#(x-1)^2 + x^2 > 1e8.  
+#simplify
+#2x^2 - 2x + (-10^8 - 1) > 0
 
-for n in range(11,100000001):
-    if isPalindrome(n):
-        a=2
-        for m in range(1,n):
-            if not m in ssqdict:
-                ssqdict[m] = ssqdict[m-1] + m**2
-            if ssqdict[m] == n:
-                interesting_nums.append(n)
-                print(n)
-                break
-            if ssqdict[m] > n:
-                ans = ssqdict[m]
-                breakout = False
-                for l in range(1,m):
-                    ans = ssqdict[m] - ssqdict[l]
-                    if ans <= n:
-                        if ans == n:
-                            interesting_nums.append(n)
-                            print(n)
-                            breakout = True
-                        break
-                if breakout:
-                    break
+#quadratic formula
+a = 2
+b = -2
+c = -1e8 - 1
 
-interesting_nums = np.asarray(interesting_nums)
+upper = (-b + (b**2-4*a*c)**0.5) / (2*a)
+
+if upper != int(upper):
+    upper = int(upper) + 1
+
+
+for n in range(2,upper+1):
+    ans = n**2
+    for m in range(n-1,0,-1):
+        ans += m**2
+        # print(f'n: {n}, m: {m}, ans: {ans}')
+        if ans > 1e8 or ans < 11:
+            break
+        if not ans in interesting_nums:
+            if isPalindrome(ans):
+                interesting_nums[ans] = ''
+                print(f'interesting: {ans}')
+
+            
+interesting_nums = np.fromiter(interesting_nums.keys(), dtype=float)
 
 print(interesting_nums.sum())
